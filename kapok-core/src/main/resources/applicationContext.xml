@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd 
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd 
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
+						http://www.springframework.org/schema/data/jpa 
+						http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
+
+
+
+
+						http://www.springframework.org/schema/task
+						http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<description>Spring公共配置</description>
+
+	<context:property-placeholder
+		ignore-resource-not-found="true" location="classpath*:application.properties" />
+
+	<bean id="propertyConfigurer"  
+	    class="com.nateiot.core.common.PropertiesUtil">  
+	    <property name="ignoreResourceNotFound" value="true" />  
+	    <property name="locations">  
+	        <list>  
+	            <value>classpath*:default.properties</value>
+	        </list>  
+	    </property>  
+	</bean>
+
+	<context:component-scan base-package="com.nateiot.*.service,com.nateiot.*.schedule,com.nateiot.*.handler" />
+	
+	<bean id="controllerAspect" class="com.nateiot.base.common.ControllerAspect"></bean>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${c3p0.jdbcUrl}" />
+		<property name="user" value="${c3p0.user}" />
+		<property name="password" value="${c3p0.password}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+	</bean>
+
+	<bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="databasePlatform">
+			<bean factory-method="getDialect"
+				class="com.nateiot.core.common.persistence.HibernateUtil">
+				<constructor-arg ref="dataSource" />
+			</bean>
+		</property>
+		<property name="showSql" value="true" />
+		<property name="generateDdl" value="false" />
+	</bean>
+
+	<!-- MyBatis配置 -->
+<!-- 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
+<!-- 		<property name="dataSource" ref="dataSource" /> -->
+<!-- 		<property name="mapperLocations" value="classpath:/mybatis/*Mapper.xml" /> -->
+<!-- 	</bean> -->
+	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口-->
+<!-- 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> -->
+<!-- 		<property name="basePackage" value="com.nateiot.*.repository.mybatis" /> -->
+<!-- 		<property name="annotationClass" value="com.nateiot.core.repository.mybatis.MyBatisRepository"/> -->
+<!-- 	</bean> -->
+
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	</bean>
+
+	<!-- Jpa Entity Manager 配置 -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<property name="packagesToScan" value="com.nateiot.*.domain" />
+		<property name="mappingResources" value="META-INF/orm.xml" />
+	</bean>
+
+	<!-- Jpa 事务配置 -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+
+	<bean id="springContextUtil" class="com.nateiot.core.common.SpringContextUtil"></bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<task:annotation-driven />
+
+	<bean id="auditorAwareImpl" class="com.nateiot.base.common.AuditorAwareImpl" />
+	
+	<bean id="dbUtil" class="com.nateiot.core.repository.DBUtil">
+		<constructor-arg ref="entityManagerFactory" />
+	</bean>
+
+	<bean id="dictUtil" class="com.nateiot.base.common.DictUtil">
+		<constructor-arg ref="gxwlSysDictHDao" />
+	</bean>
+
+	<bean id="configUtil" class="com.nateiot.base.common.ConfigUtil">
+		<constructor-arg ref="gxwlSysConfigDao" />
+	</bean>
+	
+	<bean id="baseUtil" class="com.nateiot.base.common.BaseUtil">
+	</bean>
+
+
+	<!-- 微信 -->
+
+	<bean id="wxMpconfig" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">
+		<!--<property name="appId" value="wx14e747268ded5f90"></property>-->
+		<!--<property name="secret" value="32d671b5f848e4a8b680e967b778129d"></property>-->
+		<!--<property name="appId" value="${wx.appId}"></property>-->
+		<!--<property name="secret" value="${wx.secret}"></property>-->
+		<!--<property name="token" value="${wx.token}"></property>-->
+	</bean>
+
+	<bean lazy-init="true" id="wxMpService" class="me.chanjar.weixin.mp.api.WxMpServiceImpl">
+		<property name="wxMpConfigStorage">
+			<ref bean="wxMpconfig" />
+		</property>
+	</bean>
+
+	<bean id="wxData" class="com.nateiot.wechat.common.WxData">
+		<constructor-arg ref="wxKeywordReplyService" />
+		<constructor-arg ref="wxCommandService" />
+	</bean>
+
+	<!-- 微信-智慧社区JDBC -->
+	<bean id="dataSourceCis" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		  destroy-method="close">
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${wx.cis.jdbcUrl}" />
+		<property name="user" value="${c3p0.user}" />
+		<property name="password" value="${c3p0.password}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+	</bean>
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSourceCis"/>
+	</bean>
+
+	<bean id="cisTxManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceCis" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="cisTxManager" />
+
+	<!-- =================== -->
+
+
+	<jpa:auditing auditor-aware-ref="auditorAwareImpl" />
+
+	<jpa:repositories base-package="com.nateiot.*.repository"
+		entity-manager-factory-ref="entityManagerFactory"
+		transaction-manager-ref="transactionManager" />
+
+	<bean id="templateEmail" class="com.nateiot.base.common.TemplateUtil">
+		<constructor-arg ref="freeMarkerConfigurer" />
+	</bean> 
+
+	<bean id="freeMarkerConfigurer"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/upload/mailtemplates/" /><!--指定模板文件目录 -->
+		<property name="freemarkerSettings"><!-- 设置FreeMarker环境属性 -->
+			<props>
+				<prop key="template_update_delay">1800</prop><!--刷新模板的周期，单位为秒 -->
+				<prop key="default_encoding">UTF-8</prop><!--模板的编码格式 -->
+				<prop key="locale">zh_CN</prop><!-- 本地化设置 -->
+			</props>
+		</property>
+	</bean> 
+
+</beans>

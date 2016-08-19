@@ -1,0 +1,88 @@
+package com.nateiot.cis.web;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nateiot.cis.domain.CisBmLeftoverChildren;
+import com.nateiot.cis.service.CisBmLeftoverChildrenService;
+import com.nateiot.core.common.web.SearchUtil;
+
+/**
+ * 留守儿童
+ * @author xiaguangjun
+ *
+ */
+@Controller
+@RequestMapping(value = "/children")
+public class CisBmLeftoverChildrenController {
+
+	
+	@Autowired
+	private CisBmLeftoverChildrenService cisBmLeftoverChildrenService;
+	
+	
+	@RequestMapping(value = "/list")
+	public String list(HttpServletRequest req) {
+		  
+		return "cis/bm/leftoverChildren/children";
+	}
+	
+	/**
+	 * 查询
+	 * @param 
+	 * @return
+	 */
+	@RequestMapping(value = "/search")
+	@ResponseBody
+	public Map<String, Object> search(HttpServletRequest req){
+		
+		return cisBmLeftoverChildrenService.getLeftoverChildren(SearchUtil.getSearchFilters(req),
+					SearchUtil.getPageableWithOrderBy(req, ""));
+	}
+	
+	/**
+	 * 保存
+	 * 
+	 * @param 
+	 * @return
+	 */
+	@RequestMapping(value = "/save")
+	@ResponseBody
+	public Map<String, Object> save(CisBmLeftoverChildren model) {
+		return cisBmLeftoverChildrenService.doSave(model);
+	}
+	
+	/**
+	 * 详细
+	 * 
+	 * @param 
+	 * @return
+	 */
+	@RequestMapping(value = "/get/{id}")
+	@ResponseBody
+	public Map<String, Object> get(
+			@PathVariable(value = "id") Integer id){
+		return cisBmLeftoverChildrenService.doSelect(id);
+	}
+	
+ 
+	/**
+	 * 硬删除记录
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/del/{id}")
+	@ResponseBody
+	public Map<String, Object> del(
+			@PathVariable(value = "id") Integer id){
+		return cisBmLeftoverChildrenService.doDelete(id);
+	}
+	
+}
