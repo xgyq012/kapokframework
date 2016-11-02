@@ -35,7 +35,8 @@
 <!-- 					<input id="meshId" type="hidden"> -->
 <!-- 					<input id="meshName" type="hidden"> -->
 <!-- 				</p> -->
-				<p class="p2"><shiro:principal/>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="${ctx}/logout">安全退出</a></p>
+				<p class="p2">超级用户&nbsp;&nbsp;|&nbsp;&nbsp;<a href="${ctx}/logout">安全退出</a></p>
+				<%--<p class="p2"><shiro:principal/>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="${ctx}/logout">安全退出</a></p>--%>
 			</div>
 		</div>
 		<div class="divider"></div>
@@ -60,8 +61,10 @@ $(function () {
 	$('#mainTabs').tabs('hideHeader');
 	
 	var ctx = '${ctx}',
-		userId = <shiro:principal property="userId"/>,
-		realname = '<shiro:principal/>',
+		<%--userId = <shiro:principal property="userId"/>,--%>
+		<%--realname = '<shiro:principal/>',--%>
+		userId = 1,
+		realname = '超级用户',
 		main = window.createMain({
 			ctx: ctx,
 			cacheOptions: {

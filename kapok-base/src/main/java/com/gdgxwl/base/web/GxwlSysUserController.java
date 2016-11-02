@@ -37,7 +37,6 @@ public class GxwlSysUserController extends ExcelController {
 	@Autowired
 	private GxwlSysUserService userService;
 
-	@RequiresPermissions("USER_LIST")
 	@RequestMapping(value = "/list")
 	public String toList() {
 		return "base/user/user";
@@ -53,7 +52,6 @@ public class GxwlSysUserController extends ExcelController {
 		return "base/user/selectuserbymesh";
 	}
 	
-	@RequiresPermissions("USER_PWD")
 	@RequestMapping(value = "/modifyPwd")
 	public String modifyPwd() {
 		return "base/user/user-modifyPwd";
@@ -72,7 +70,6 @@ public class GxwlSysUserController extends ExcelController {
 	}
 
 	// 加载用户
-	@RequiresPermissions("USER_EDIT")
 	@RequestMapping(value = "/get/{id}")
 	@ResponseBody
 	public Map<String, Object> getGxwlSysUserById(@PathVariable Integer id) {
@@ -80,7 +77,6 @@ public class GxwlSysUserController extends ExcelController {
 	}
 
 	// 删除用户
-	@RequiresPermissions("USER_DEL")
 	@RequestMapping(value = "/del/{id}")
 	@ResponseBody
 	public Map<String, Object> delGxwlSysUserById(@PathVariable Integer id) {
@@ -88,7 +84,6 @@ public class GxwlSysUserController extends ExcelController {
 	}
 
 	// 保存用户
-	@RequiresPermissions("USER_SAVE")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> saveGxwlSysUser(GxwlSysUser user) {
@@ -96,7 +91,6 @@ public class GxwlSysUserController extends ExcelController {
 	}
 
 	// 重设密码
-	@RequiresPermissions("USER_RESETPASSWORD")
 	@RequestMapping(value = "/resetpassword/{userId}")
 	@ResponseBody
 	public Map<String, Object> resetPassword(@PathVariable Integer userId) {

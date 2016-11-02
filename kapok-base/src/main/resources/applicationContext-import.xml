@@ -6,7 +6,7 @@
 
 	<description>导入applicationContext文件列表</description>
 
-	<import resource="shiro/applicationContext-shiro.xml" />
-<!-- 	<import resource="schedule/applicationContext-quartz.xml" /> -->
+	<!--<import resource="shiro/applicationContext-shiro.xml" />-->
+ 	<!--<import resource="schedule/applicationContext-quartz.xml" /> -->
 
 </beans>

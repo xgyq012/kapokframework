@@ -28,7 +28,8 @@
 	<div class="u-info">
 		<ul>
 			<li>
-				<a>欢迎您：<shiro:principal/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+				<%--<a>欢迎您：<shiro:principal/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>--%>
+				<a>欢迎您：超级用户&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
 			</li>
 			<li>
 				<a href="${ctx}/logout"><i class="fa fa-sign-out"></i>安全退出</a>

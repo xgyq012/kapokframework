@@ -23,21 +23,21 @@
 <div class="g-layout">
 	<!-- 按钮区域 -->
 	<div class="g-toolbar">
-		<shiro:hasPermission name="USER_ADD">
+		<%--<shiro:hasPermission name="USER_ADD">--%>
 			<a id="add" class="easyui-linkbutton toolbar g-button" onclick="add()"><i class="fa fa-plus"></i>新增</a>
-		</shiro:hasPermission>
-		<shiro:hasPermission name="USER_DEL">
+		<%--</shiro:hasPermission>--%>
+		<%--<shiro:hasPermission name="USER_DEL">--%>
 			<a id="del" class="easyui-linkbutton toolbar g-button" onclick="del()"><i class="fa fa-trash-o"></i>删除</a>
-		</shiro:hasPermission>
-		<shiro:hasPermission name="USER_EDIT">
+		<%--</shiro:hasPermission>--%>
+		<%--<shiro:hasPermission name="USER_EDIT">--%>
 			<a id="edit" class="easyui-linkbutton toolbar g-button" onclick="edit()"><i class="fa fa-edit"></i>修改</a>
-		</shiro:hasPermission>
-		<shiro:hasPermission name="USER_SAVE">
+		<%--</shiro:hasPermission>--%>
+		<%--<shiro:hasPermission name="USER_SAVE">--%>
 			<a id="save" class="easyui-linkbutton toolbar g-button" onclick="save()"><i class="fa fa-floppy-o"></i>保存</a>
-		</shiro:hasPermission>
-		<shiro:hasPermission name="USER_RESETPASSWORD">
+		<%--</shiro:hasPermission>--%>
+		<%--<shiro:hasPermission name="USER_RESETPASSWORD">--%>
 			<a id="resetPassword" class="easyui-linkbutton toolbar g-button" onclick="resetPassword()"><i class="fa fa-reply"></i>重置密码</a>
-		</shiro:hasPermission>
+		<%--</shiro:hasPermission>--%>
 <!-- 			<a id="excelImport" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-import'">Excel导入</a> -->
 <!-- 			<a id="excelExport" href="javascript:void(0);" class="easyui-splitbutton" onclick="excelExport('N');" data-options="menu:'#mm2',plain:true,iconCls:'icon-export'">Excel导出</a> -->
 <!-- 			<a id="print" href="javascript:void(0);" class="easyui-splitbutton" onclick="print('N');" data-options="menu:'#mm3',plain:true,iconCls:'icon-print'">打印</a> -->
