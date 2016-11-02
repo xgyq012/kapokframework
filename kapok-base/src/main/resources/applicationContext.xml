@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd 
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd 
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
+						http://www.springframework.org/schema/data/jpa 
+						http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
+						http://www.springframework.org/schema/task
+						http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<description>Spring公共配置</description>
+
+	<context:property-placeholder
+		ignore-resource-not-found="true" location="classpath*:application.properties" />
+
+	<bean id="propertyConfigurer"  
+	    class="com.gdgxwl.core.common.PropertiesUtil">
+	    <property name="ignoreResourceNotFound" value="true" />  
+	    <property name="locations">  
+	        <list>  
+	            <value>classpath*:default.properties</value>
+	        </list>  
+	    </property>  
+	</bean>
+
+	<context:component-scan base-package="com.gdgxwl.*.service" />
+	
+	<bean id="controllerAspect" class="com.gdgxwl.base.common.ControllerAspect"></bean>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${c3p0.jdbcUrl}" />
+		<property name="user" value="${c3p0.user}" />
+		<property name="password" value="${c3p0.password}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+	</bean>
+
+
+	<bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="databasePlatform">
+			<bean factory-method="getDialect"
+				class="com.gdgxwl.core.common.persistence.HibernateUtil">
+				<constructor-arg ref="dataSource" />
+			</bean>
+		</property>
+		<property name="showSql" value="true" />
+		<property name="generateDdl" value="false" />
+	</bean>
+
+
+
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	</bean>
+
+	<!-- Jpa Entity Manager 配置 -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<property name="packagesToScan" value="com.gdgxwl.*.domain" />
+		<property name="mappingResources" value="META-INF/orm.xml" />
+	</bean>
+
+	<!-- Jpa 事务配置 -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+
+	<bean id="springContextUtil" class="com.gdgxwl.core.common.SpringContextUtil"></bean>
+
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<task:annotation-driven />
+
+	<bean id="auditorAwareImpl" class="com.gdgxwl.base.common.AuditorAwareImpl" />
+
+	<bean id="dbUtil" class="com.gdgxwl.core.repository.DBUtil">
+		<constructor-arg ref="entityManagerFactory" />
+	</bean>
+
+	<bean id="dictUtil" class="com.gdgxwl.base.common.DictUtil">
+		<constructor-arg ref="gxwlSysDictHDao" />
+	</bean>
+
+	<bean id="configUtil" class="com.gdgxwl.base.common.ConfigUtil">
+		<constructor-arg ref="gxwlSysConfigDao" />
+	</bean>
+	
+	<bean id="baseUtil" class="com.gdgxwl.base.common.BaseUtil"/>
+
+	<jpa:auditing auditor-aware-ref="auditorAwareImpl" />
+
+	<jpa:repositories base-package="com.gdgxwl.*.repository"
+		entity-manager-factory-ref="entityManagerFactory"
+		transaction-manager-ref="transactionManager" />
+
+
+
+</beans>
