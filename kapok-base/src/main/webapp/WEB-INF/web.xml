@@ -66,16 +66,16 @@
 	</filter-mapping>
 
 	<!-- Shiro Security filter -->
-	<filter>
-		<filter-name>shiroFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>shiroFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
+	<!--<filter>-->
+		<!--<filter-name>shiroFilter</filter-name>-->
+		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
+	<!--</filter>-->
+	<!--<filter-mapping>-->
+		<!--<filter-name>shiroFilter</filter-name>-->
+		<!--<url-pattern>/*</url-pattern>-->
+		<!--<dispatcher>REQUEST</dispatcher>-->
+		<!--<dispatcher>FORWARD</dispatcher>-->
+	<!--</filter-mapping>-->
 
 	<!-- 禁用Servlet容器的欢迎页，需要兼容Servlet 3和Tomcat 7 -->
 	<welcome-file-list>
