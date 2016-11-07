@@ -2,9 +2,9 @@
 
 ### 部署kapok-base应用
 
-1. 在你的MySQL里创建数据库kapok-base
+1. 在你的MySQL里创建数据库kapok_base
     ```sql
-    create database kapok-base;
+    create database kapok_base;
     ```
     
 2. 把kapok-base/script里的kapok_base.sql导入到新创建的数据库中
